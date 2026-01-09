@@ -59,7 +59,7 @@ export function DashboardPage({ onLogout }: DashboardPageProps) {
               <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">
                 Welcome back 
                  <span className="text-yellow-500 font-medium px-1">
-                  {userId}
+                  {userId || "Guest"}
                 </span>
                  ! Here's your overview.
               </p>
