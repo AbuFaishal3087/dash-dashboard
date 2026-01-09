@@ -28,7 +28,7 @@ const quickActions = [
 
 export function DashboardPage({ onLogout }: DashboardPageProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-   const { userId } = useAuthStore();
+  const { userId } = useAuthStore();
 
   return (
     <div className="min-h-screen bg-background flex">
