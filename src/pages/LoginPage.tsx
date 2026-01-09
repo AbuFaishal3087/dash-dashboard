@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Car, Lock, User, MapPin, Building2 } from "lucide-react"
 
 interface LoginPageProps {
-  onLogin: (userId : string) => void
+  onLogin: (userId: string) => void
 }
 
 export function LoginPage({ onLogin }: LoginPageProps) {
