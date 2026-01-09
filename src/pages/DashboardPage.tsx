@@ -1,244 +1,135 @@
 import { useState } from "react"
+import { Sidebar } from "@/components/Sidebar"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible"
-import { ChevronRight, ChevronDown } from "lucide-react"
+  Car,
+  ClipboardList,
+  Users,
+  TrendingUp,
+  Clock,
+  AlertCircle,
+  ChevronRight,
+  Bell,
+  Menu,
+} from "lucide-react"
 
 interface DashboardPageProps {
   onLogout: () => void
 }
 
-interface MenuItem {
-  label: string
-  children?: MenuItem[]
-}
-
-const menuItems: MenuItem[] = [
-  { label: "Logon/Logoff" },
-  { label: "Res/Rental Research" },
-  {
-    label: "Counter Functions",
-    children: [
-      { label: "Rent" },
-      { label: "Return" },
-      { label: "GS Start Rent" },
-      { label: "Select GS Res List" },
-      { label: "Post Rent" },
-      { label: "Post Return" },
-      { label: "Select Res Manifest" },
-      { label: "Non-Move Exchange" },
-      { label: "Vehicle Exchange" },
-      { label: "AAO" },
-      { label: "Update Opt Services" },
-      { label: "Platinum Pre-Print" },
-      { label: "Platinum Complete" },
-      { label: "Incomplete RR List" },
-      { label: "Complete Rental" },
-    ],
-  },
-  {
-    label: "Inventory Mgmt",
-    children: [
-      { label: "Vehicle Status" },
-      { label: "Fleet Report" },
-      { label: "Vehicle Search" },
-    ],
-  },
-  {
-    label: "Information Search",
-    children: [
-      { label: "Customer Lookup" },
-      { label: "Reservation Search" },
-      { label: "Rate Inquiry" },
-    ],
-  },
-  {
-    label: "Admin",
-    children: [
-      { label: "User Management" },
-      { label: "System Config" },
-      { label: "Audit Logs" },
-    ],
-  },
-  {
-    label: "Rental Management",
-    children: [
-      { label: "Rent" },
-      { label: "Return" },
-      { label: "RA Enquiry" },
-      { label: "Post Rent" },
-      { label: "Post Return" },
-      { label: "Continuous Rental" },
-      { label: "Cont.Rental Hist." },
-      { label: "Gold Service" },
-    ],
-  },
-  {
-    label: "Res Processing",
-    children: [
-      { label: "New Reservation" },
-      { label: "Modify Reservation" },
-      { label: "Cancel Reservation" },
-    ],
-  },
-  { label: "#1 Club Update" },
-  {
-    label: "Car Control",
-    children: [
-      { label: "Check In" },
-      { label: "Check Out" },
-      { label: "Vehicle Transfer" },
-    ],
-  },
-  {
-    label: "Reports",
-    children: [
-      { label: "Daily Summary" },
-      { label: "Revenue Report" },
-      { label: "Fleet Utilization" },
-    ],
-  },
-  {
-    label: "System Admin",
-    children: [
-      { label: "Settings" },
-      { label: "Permissions" },
-      { label: "Backup" },
-    ],
-  },
-  {
-    label: "Security Menu",
-    children: [
-      { label: "Change Password" },
-      { label: "Session Management" },
-      { label: "Access Control" },
-    ],
-  },
+const quickActions = [
+  { label: "New Rental", icon: <Car className="h-5 w-5" /> },
+  { label: "Process Return", icon: <ClipboardList className="h-5 w-5" /> },
+  { label: "Search Customer", icon: <Users className="h-5 w-5" /> },
+  { label: "View Reports", icon: <TrendingUp className="h-5 w-5" /> },
 ]
 
-function SidebarItem({ item }: { item: MenuItem }) {
-  const [isOpen, setIsOpen] = useState(false)
-  const hasChildren = item.children && item.children.length > 0
-
-  if (!hasChildren) {
-    return (
-      <Button
-        variant="sidebar"
-        size="sidebar"
-        className="w-full justify-start text-left"
-      >
-        {item.label}
-      </Button>
-    )
-  }
-
-  return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <CollapsibleTrigger asChild>
-        <Button
-          variant="sidebar"
-          size="sidebar"
-          className="w-full justify-between text-left"
-        >
-          <span>{item.label}</span>
-          {isOpen ? (
-            <ChevronDown className="h-3 w-3" />
-          ) : (
-            <ChevronRight className="h-3 w-3" />
-          )}
-        </Button>
-      </CollapsibleTrigger>
-      <CollapsibleContent className="pl-2 space-y-0.5 mt-0.5">
-        {item.children?.map((child, index) => (
-          <Button
-            key={index}
-            variant="ghost"
-            size="sidebar"
-            className="w-full justify-start text-left bg-brand-yellow/50 hover:bg-brand-yellow border border-gray-300"
-          >
-            {child.label}
-          </Button>
-        ))}
-      </CollapsibleContent>
-    </Collapsible>
-  )
-}
-
 export function DashboardPage({ onLogout }: DashboardPageProps) {
-  return (
-    <div className="min-h-screen bg-lavender flex flex-col">
-      {/* Header */}
-      <header className="bg-brand-yellow border-b-2 border-gray-400 px-4 py-2 flex items-center justify-between">
-        <div className="flex items-center gap-6">
-          <div className="font-bold text-xl tracking-wide text-black">Hertz</div>
-          <div className="text-xs text-gray-700">
-            Version ID: 3.21.0-14.11
-          </div>
-          <div className="flex items-center gap-2 text-xs text-gray-700">
-            <span>Login Location / Counter:</span>
-            <span className="font-medium">GEHDOFF / 01</span>
-          </div>
-        </div>
-        <h1 className="text-xl font-semibold text-gray-800">WELCOME TO DASH</h1>
-      </header>
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
-      {/* Subheader */}
-      <div className="bg-lavender-dark border-b border-gray-300 px-4 py-1 text-sm text-gray-700">
-        3.19.0 - TESTING
-      </div>
+  return (
+    <div className="min-h-screen bg-background flex">
+      <Sidebar
+        onLogout={onLogout}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
 
       {/* Main Content */}
-      <div className="flex flex-1">
-        {/* Sidebar */}
-        <aside className="w-44 bg-lavender border-r border-gray-300 p-1 space-y-0.5 overflow-y-auto">
-          {menuItems.map((item, index) => (
-            <SidebarItem key={index} item={item} />
-          ))}
-        </aside>
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+        {/* Header */}
+        <header className="h-14 sm:h-16 border-b bg-white/80 backdrop-blur-sm flex items-center justify-between px-4 sm:px-6 sticky top-0 z-10">
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="lg:hidden"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+            <div>
+              <h1 className="text-lg sm:text-xl font-bold text-foreground">Dashboard</h1>
+              <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">
+                Welcome back! Here's your overview.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 sm:gap-4">
+            <Button variant="ghost" size="icon" className="relative">
+              <Bell className="h-5 w-5" />
+              <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full" />
+            </Button>
+            <div className="hidden sm:flex items-center gap-3 pl-4 border-l">
+              <div className="text-right">
+                <p className="text-sm font-medium">GEHDOFF / 01</p>
+                <p className="text-xs text-muted-foreground">CASFO15</p>
+              </div>
+            </div>
+          </div>
+        </header>
 
-        {/* Main Content Area */}
-        <main className="flex-1 p-6">
-          {/* Welcome Card */}
-          <Card className="bg-tan border-2 border-gray-400 mb-6">
-            <CardContent className="p-6 text-center">
-              <h2 className="text-lg font-bold text-gray-800 mb-4">
-                Copyright (c) 2003 The Hertz Corporation
-              </h2>
-              <p className="font-semibold text-gray-800 mb-4">
-                All Rights Reserved (Unpublished)
-              </p>
-              <p className="text-sm text-red-700 leading-relaxed max-w-2xl mx-auto">
-                The information contained herein is confidential and proprietary
-                to The Hertz Corporation and may not be duplicated, disclosed to
-                third parties, or used for any purpose not expressly authorized
-                by it. Any unauthorized use, duplication or disclosure is
-                prohibited by law.
-              </p>
+        {/* Content */}
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
+          {/* Welcome Banner */}
+          <Card className="bg-gradient-to-r from-sidebar to-lavender-deep border-0 text-white overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-32 sm:w-64 h-32 sm:h-64 bg-sidebar-primary/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
+            <CardContent className="p-4 sm:p-6 relative z-10">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-bold">Welcome to TAS</h2>
+                  <p className="text-white/80 mt-1 text-sm sm:text-base">Logon Successful</p>
+                  <div className="flex items-center gap-2 mt-3 sm:mt-4 text-xs sm:text-sm">
+                    <AlertCircle className="h-4 w-4 text-sidebar-primary flex-shrink-0" />
+                    <span className="text-white/70">Your password will expire in 20 days</span>
+                  </div>
+                </div>
+                <div className="text-left sm:text-right">
+                  <p className="text-xs text-white/60">Session started</p>
+                  <p className="text-sm font-medium flex items-center gap-1 sm:justify-end">
+                    <Clock className="h-4 w-4" />
+                    {new Date().toLocaleTimeString()}
+                  </p>
+                </div>
+              </div>
             </CardContent>
           </Card>
 
-          {/* Status Card */}
-          <Card className="bg-tan border-2 border-gray-400">
-            <CardContent className="p-6 text-center">
-              <h3 className="text-lg font-bold text-gray-800 mb-2">
-                Logon Successful
-              </h3>
-              <p className="text-gray-800 mb-4">Welcome to TAS</p>
-              <p className="text-sm text-gray-700 mb-2">
-                Your Current Password will expire in 20 days.
-              </p>
-              <p className="text-sm text-gray-700">
-                Please select an application from the Navigation Bar
-              </p>
-              <div className="mt-6">
-                <Button variant="sidebar" onClick={onLogout}>
-                  Logout
+          {/* Quick Actions */}
+          <Card className="w-full sm:max-w-md">
+            <CardHeader className="pb-3 px-4 sm:px-6">
+              <CardTitle className="text-lg">Quick Actions</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 px-4 sm:px-6">
+              {quickActions.map((action, i) => (
+                <Button
+                  key={i}
+                  variant="outline"
+                  className="w-full justify-between h-12 hover:bg-accent"
+                >
+                  <span className="flex items-center gap-3">
+                    <span className="h-8 w-8 rounded-lg bg-sidebar-primary/10 flex items-center justify-center text-sidebar-primary">
+                      {action.icon}
+                    </span>
+                    <span className="text-sm">{action.label}</span>
+                  </span>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
                 </Button>
-              </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          {/* Legal Notice */}
+          <Card className="bg-tan/30 border-tan-dark/30">
+            <CardContent className="p-4 text-center">
+              <p className="text-xs sm:text-sm font-medium text-foreground">
+                Copyright (c) 2003 The Hertz Corporation - All Rights Reserved
+              </p>
+              <p className="text-xs text-muted-foreground mt-1 max-w-2xl mx-auto">
+                The information contained herein is confidential and proprietary. Unauthorized use,
+                duplication or disclosure is prohibited by law.
+              </p>
             </CardContent>
           </Card>
         </main>
