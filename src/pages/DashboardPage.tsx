@@ -1,7 +1,5 @@
-import { useState } from "react"
-import { Sidebar } from "@/components/Sidebar"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   Car,
   ClipboardList,
@@ -10,145 +8,113 @@ import {
   Clock,
   AlertCircle,
   ChevronRight,
-  Bell,
-  Menu,
-} from "lucide-react"
-import useAuthStore from "@/store/useAuthStore"
-
-interface DashboardPageProps {
-  onLogout: () => void
-}
+} from "lucide-react";
 
 const quickActions = [
   { label: "New Rental", icon: <Car className="h-5 w-5" aria-hidden="true" /> },
-  { label: "Process Return", icon: <ClipboardList className="h-5 w-5" aria-hidden="true" /> },
-  { label: "Search Customer", icon: <Users className="h-5 w-5" aria-hidden="true" /> },
-  { label: "View Reports", icon: <TrendingUp className="h-5 w-5" aria-hidden="true" /> },
-]
+  {
+    label: "Process Return",
+    icon: <ClipboardList className="h-5 w-5" aria-hidden="true" />,
+  },
+  {
+    label: "Search Customer",
+    icon: <Users className="h-5 w-5" aria-hidden="true" />,
+  },
+  {
+    label: "View Reports",
+    icon: <TrendingUp className="h-5 w-5" aria-hidden="true" />,
+  },
+];
 
-export function DashboardPage({ onLogout }: DashboardPageProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const { userId } = useAuthStore();
-
+export function DashboardPage() {
   return (
-    <div className="min-h-screen bg-background flex">
-      <Sidebar
-        onLogout={onLogout}
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-      />
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-        {/* Header */}
-        <header className="h-14 sm:h-16 border-b bg-white/80 backdrop-blur-sm flex items-center justify-between px-4 sm:px-6 sticky top-0 z-10">
-          <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="lg:hidden min-h-[44px] min-w-[44px]"
-              onClick={() => setSidebarOpen(true)}
-              aria-label="Open navigation menu"
-              aria-expanded={sidebarOpen}
-              aria-controls="main-sidebar"
-            >
-              <Menu className="h-5 w-5" aria-hidden="true" />
-            </Button>
+    <main className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
+      {/* Welcome Banner */}
+      <Card
+        className="bg-gradient-to-r from-sidebar to-lavender-deep border-0 text-white overflow-hidden relative"
+        role="region"
+        aria-label="Welcome banner"
+      >
+        <div
+          className="absolute top-0 right-0 w-32 sm:w-64 h-32 sm:h-64 bg-sidebar-primary/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"
+          aria-hidden="true"
+        />
+        <CardContent className="p-4 sm:p-6 relative z-10">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
             <div>
-              <h1 className="text-lg sm:text-xl font-bold text-foreground">Dashboard</h1>
-              <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">
-                Welcome back{" "}
-                <span className="text-yellow-500 font-medium px-1">
-                  {userId}
+              <h2 className="text-xl sm:text-2xl font-bold">Welcome to TAS</h2>
+              <p className="text-white/80 mt-1 text-sm sm:text-base">
+                Logon Successful
+              </p>
+              <div
+                className="flex items-center gap-2 mt-3 sm:mt-4 text-xs sm:text-sm"
+                role="alert"
+              >
+                <AlertCircle
+                  className="h-4 w-4 text-sidebar-primary flex-shrink-0"
+                  aria-hidden="true"
+                />
+                <span className="text-white/70">
+                  Your password will expire in 20 days
                 </span>
-                ! Here's your overview.
+              </div>
+            </div>
+            <div className="text-left sm:text-right">
+              <p className="text-xs text-white/60">Session started</p>
+              <p className="text-sm font-medium flex items-center gap-1 sm:justify-end">
+                <Clock className="h-4 w-4" aria-hidden="true" />
+                <time dateTime={new Date().toISOString()}>
+                  {new Date().toLocaleTimeString()}
+                </time>
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2 sm:gap-4">
+        </CardContent>
+      </Card>
+
+      {/* Quick Actions */}
+      <Card className="w-full sm:max-w-md">
+        <CardHeader className="pb-3 px-4 sm:px-6">
+          <CardTitle className="text-lg">Quick Actions</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2 px-4 sm:px-6">
+          {quickActions.map((action, i) => (
             <Button
-              variant="ghost"
-              size="icon"
-              className="relative min-h-[44px] min-w-[44px]"
-              aria-label="Notifications, 1 unread"
+              key={i}
+              variant="outline"
+              className="w-full justify-between min-h-[48px] hover:bg-accent touch-manipulation"
+              aria-label={action.label}
             >
-              <Bell className="h-5 w-5" aria-hidden="true" />
-              <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full" aria-hidden="true" />
-            </Button>
-            <div className="hidden sm:flex items-center gap-3 pl-4 border-l">
-              <div className="text-right">
-                <p className="text-sm font-medium">GEHDOFF / 01</p>
-                <p className="text-xs text-muted-foreground">CASFO15</p>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* Content */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
-          {/* Welcome Banner */}
-          <Card className="bg-gradient-to-r from-sidebar to-lavender-deep border-0 text-white overflow-hidden relative" role="region" aria-label="Welcome banner">
-            <div className="absolute top-0 right-0 w-32 sm:w-64 h-32 sm:h-64 bg-sidebar-primary/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" aria-hidden="true" />
-            <CardContent className="p-4 sm:p-6 relative z-10">
-              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                <div>
-                  <h2 className="text-xl sm:text-2xl font-bold">Welcome to TAS</h2>
-                  <p className="text-white/80 mt-1 text-sm sm:text-base">Logon Successful</p>
-                  <div className="flex items-center gap-2 mt-3 sm:mt-4 text-xs sm:text-sm" role="alert">
-                    <AlertCircle className="h-4 w-4 text-sidebar-primary flex-shrink-0" aria-hidden="true" />
-                    <span className="text-white/70">Your password will expire in 20 days</span>
-                  </div>
-                </div>
-                <div className="text-left sm:text-right">
-                  <p className="text-xs text-white/60">Session started</p>
-                  <p className="text-sm font-medium flex items-center gap-1 sm:justify-end">
-                    <Clock className="h-4 w-4" aria-hidden="true" />
-                    <time dateTime={new Date().toISOString()}>{new Date().toLocaleTimeString()}</time>
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Quick Actions */}
-          <Card className="w-full sm:max-w-md">
-            <CardHeader className="pb-3 px-4 sm:px-6">
-              <CardTitle className="text-lg">Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2 px-4 sm:px-6">
-              {quickActions.map((action, i) => (
-                <Button
-                  key={i}
-                  variant="outline"
-                  className="w-full justify-between min-h-[48px] hover:bg-accent touch-manipulation"
-                  aria-label={action.label}
+              <span className="flex items-center gap-3">
+                <span
+                  className="h-8 w-8 rounded-lg bg-sidebar-primary/10 flex items-center justify-center text-sidebar-primary"
+                  aria-hidden="true"
                 >
-                  <span className="flex items-center gap-3">
-                    <span className="h-8 w-8 rounded-lg bg-sidebar-primary/10 flex items-center justify-center text-sidebar-primary" aria-hidden="true">
-                      {action.icon}
-                    </span>
-                    <span className="text-sm">{action.label}</span>
-                  </span>
-                  <ChevronRight className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                </Button>
-              ))}
-            </CardContent>
-          </Card>
+                  {action.icon}
+                </span>
+                <span className="text-sm">{action.label}</span>
+              </span>
+              <ChevronRight
+                className="h-4 w-4 text-muted-foreground"
+                aria-hidden="true"
+              />
+            </Button>
+          ))}
+        </CardContent>
+      </Card>
 
-          {/* Legal Notice */}
-          <Card className="bg-tan/30 border-tan-dark/30">
-            <CardContent className="p-4 text-center">
-              <p className="text-xs sm:text-sm font-medium text-foreground">
-                Copyright (c) 2003 The Hertz Corporation - All Rights Reserved
-              </p>
-              <p className="text-xs text-muted-foreground mt-1 max-w-2xl mx-auto">
-                The information contained herein is confidential and proprietary. Unauthorized use,
-                duplication or disclosure is prohibited by law.
-              </p>
-            </CardContent>
-          </Card>
-        </main>
-      </div>
-    </div>
-  )
+      {/* Legal Notice */}
+      <Card className="bg-tan/30 border-tan-dark/30">
+        <CardContent className="p-4 text-center">
+          <p className="text-xs sm:text-sm font-medium text-foreground">
+            Copyright (c) 2003 The Hertz Corporation - All Rights Reserved
+          </p>
+          <p className="text-xs text-muted-foreground mt-1 max-w-2xl mx-auto">
+            The information contained herein is confidential and proprietary.
+            Unauthorized use, duplication or disclosure is prohibited by law.
+          </p>
+        </CardContent>
+      </Card>
+    </main>
+  );
 }
