@@ -86,7 +86,12 @@ The primary goals of the current architecture are:
 
 ### Testing (current state + recommended approach)
 
-**Current state:** there is no dedicated test runner configured yet (no Vitest/Jest/Playwright dependencies or test scripts in [`package.json`](package.json:1)).
+**Current state:** the repo includes unit/component testing dependencies (Vitest + jsdom + React Testing Library) and provides npm scripts for running them (see [`package.json`](package.json:1)).
+
+- Unit/component tests: `npm run test`, `npm run test:watch`, `npm run test:ui`, `npm run test:coverage`
+- E2E tests: `npm run test:e2e`, `npm run test:e2e:ui` (Playwright)
+
+> Note: Playwright typically requires a one-time browser install step (`npx playwright install`) in CI/dev environments.
 
 **Recommended layered test strategy (when tests are introduced):**
 
