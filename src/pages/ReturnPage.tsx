@@ -1,0 +1,9 @@
+export default function ReturnPage() {
+  return (
+    <div className="flex justify-center items-center w-full h-dvh bg-gray-100">
+      <p className="text-gray-700 text-lg font-medium">
+        This is Return Vehicle Page
+      </p>
+    </div>
+  );
+}

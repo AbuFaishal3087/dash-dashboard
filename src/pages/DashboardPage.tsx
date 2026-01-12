@@ -3,34 +3,43 @@ import { Button } from "@/components/ui/button";
 import {
   Car,
   ClipboardList,
-  Users,
+  ArrowRightLeft,
   TrendingUp,
-  Clock,
-  AlertCircle,
+  // Clock,
+  // AlertCircle,
   ChevronRight,
 } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
 
 const quickActions = [
-  { label: "New Rental", icon: <Car className="h-5 w-5" aria-hidden="true" /> },
+  {
+    label: "New Rental",
+    icon: <Car className="h-5 w-5" aria-hidden="true" />,
+    path: "/rent",
+  },
   {
     label: "Process Return",
     icon: <ClipboardList className="h-5 w-5" aria-hidden="true" />,
+    path: "/return",
   },
   {
-    label: "Search Customer",
-    icon: <Users className="h-5 w-5" aria-hidden="true" />,
+    label: "Vehicle Exchange",
+    icon: <ArrowRightLeft className="h-5 w-5" aria-hidden="true" />,
+    path: "/vehicle_exchange",
   },
   {
-    label: "View Reports",
+    label: "AAO",
     icon: <TrendingUp className="h-5 w-5" aria-hidden="true" />,
+    path: "/aao",
   },
 ];
 
 export function DashboardPage() {
+  const navigate = useNavigate();
   return (
     <main className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
       {/* Welcome Banner */}
-      <Card
+      {/* <Card
         className="bg-gradient-to-r from-sidebar to-lavender-deep border-0 text-white overflow-hidden relative"
         role="region"
         aria-label="Welcome banner"
@@ -70,7 +79,7 @@ export function DashboardPage() {
             </div>
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
 
       {/* Quick Actions */}
       <Card className="w-full sm:max-w-md">
@@ -84,6 +93,7 @@ export function DashboardPage() {
               variant="outline"
               className="w-full justify-between min-h-[48px] hover:bg-accent touch-manipulation"
               aria-label={action.label}
+              onClick={() => navigate({ to: action.path })}
             >
               <span className="flex items-center gap-3">
                 <span
@@ -104,7 +114,7 @@ export function DashboardPage() {
       </Card>
 
       {/* Legal Notice */}
-      <Card className="bg-tan/30 border-tan-dark/30">
+      {/* <Card className="bg-tan/30 border-tan-dark/30">
         <CardContent className="p-4 text-center">
           <p className="text-xs sm:text-sm font-medium text-foreground">
             Copyright (c) 2003 The Hertz Corporation - All Rights Reserved
@@ -114,7 +124,7 @@ export function DashboardPage() {
             Unauthorized use, duplication or disclosure is prohibited by law.
           </p>
         </CardContent>
-      </Card>
+      </Card> */}
     </main>
   );
 }

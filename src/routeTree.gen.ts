@@ -12,7 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthVehicle_exchangeRouteImport } from './routes/_auth.vehicle_exchange'
+import { Route as AuthReturnRouteImport } from './routes/_auth.return'
+import { Route as AuthRentRouteImport } from './routes/_auth.rent'
 import { Route as AuthDashboardRouteImport } from './routes/_auth.dashboard'
+import { Route as AuthAaoRouteImport } from './routes/_auth.aao'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -28,35 +32,90 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthVehicle_exchangeRoute = AuthVehicle_exchangeRouteImport.update({
+  id: '/vehicle_exchange',
+  path: '/vehicle_exchange',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthReturnRoute = AuthReturnRouteImport.update({
+  id: '/return',
+  path: '/return',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthRentRoute = AuthRentRouteImport.update({
+  id: '/rent',
+  path: '/rent',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AuthDashboardRoute = AuthDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthAaoRoute = AuthAaoRouteImport.update({
+  id: '/aao',
+  path: '/aao',
   getParentRoute: () => AuthRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/aao': typeof AuthAaoRoute
   '/dashboard': typeof AuthDashboardRoute
+  '/rent': typeof AuthRentRoute
+  '/return': typeof AuthReturnRoute
+  '/vehicle_exchange': typeof AuthVehicle_exchangeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/aao': typeof AuthAaoRoute
   '/dashboard': typeof AuthDashboardRoute
+  '/rent': typeof AuthRentRoute
+  '/return': typeof AuthReturnRoute
+  '/vehicle_exchange': typeof AuthVehicle_exchangeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
+  '/_auth/aao': typeof AuthAaoRoute
   '/_auth/dashboard': typeof AuthDashboardRoute
+  '/_auth/rent': typeof AuthRentRoute
+  '/_auth/return': typeof AuthReturnRoute
+  '/_auth/vehicle_exchange': typeof AuthVehicle_exchangeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/dashboard'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/aao'
+    | '/dashboard'
+    | '/rent'
+    | '/return'
+    | '/vehicle_exchange'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/dashboard'
-  id: '__root__' | '/' | '/_auth' | '/login' | '/_auth/dashboard'
+  to:
+    | '/'
+    | '/login'
+    | '/aao'
+    | '/dashboard'
+    | '/rent'
+    | '/return'
+    | '/vehicle_exchange'
+  id:
+    | '__root__'
+    | '/'
+    | '/_auth'
+    | '/login'
+    | '/_auth/aao'
+    | '/_auth/dashboard'
+    | '/_auth/rent'
+    | '/_auth/return'
+    | '/_auth/vehicle_exchange'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -88,6 +147,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_auth/vehicle_exchange': {
+      id: '/_auth/vehicle_exchange'
+      path: '/vehicle_exchange'
+      fullPath: '/vehicle_exchange'
+      preLoaderRoute: typeof AuthVehicle_exchangeRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/return': {
+      id: '/_auth/return'
+      path: '/return'
+      fullPath: '/return'
+      preLoaderRoute: typeof AuthReturnRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/rent': {
+      id: '/_auth/rent'
+      path: '/rent'
+      fullPath: '/rent'
+      preLoaderRoute: typeof AuthRentRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/_auth/dashboard': {
       id: '/_auth/dashboard'
       path: '/dashboard'
@@ -95,15 +175,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthDashboardRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_auth/aao': {
+      id: '/_auth/aao'
+      path: '/aao'
+      fullPath: '/aao'
+      preLoaderRoute: typeof AuthAaoRouteImport
+      parentRoute: typeof AuthRoute
+    }
   }
 }
 
 interface AuthRouteChildren {
+  AuthAaoRoute: typeof AuthAaoRoute
   AuthDashboardRoute: typeof AuthDashboardRoute
+  AuthRentRoute: typeof AuthRentRoute
+  AuthReturnRoute: typeof AuthReturnRoute
+  AuthVehicle_exchangeRoute: typeof AuthVehicle_exchangeRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
+  AuthAaoRoute: AuthAaoRoute,
   AuthDashboardRoute: AuthDashboardRoute,
+  AuthRentRoute: AuthRentRoute,
+  AuthReturnRoute: AuthReturnRoute,
+  AuthVehicle_exchangeRoute: AuthVehicle_exchangeRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
