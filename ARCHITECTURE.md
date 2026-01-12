@@ -84,6 +84,36 @@ The primary goals of the current architecture are:
 - **TypeScript project references**
   - Split app vs node (Vite config) compiler options (see [`tsconfig.json`](tsconfig.json:1), [`tsconfig.app.json`](tsconfig.app.json:1), [`tsconfig.node.json`](tsconfig.node.json:1)).
 
+### Testing (current state + recommended approach)
+
+**Current state:** there is no dedicated test runner configured yet (no Vitest/Jest/Playwright dependencies or test scripts in [`package.json`](package.json:1)).
+
+**Recommended layered test strategy (when tests are introduced):**
+
+1) **Unit tests (pure functions, utilities)**
+   - Target: helpers like [`cn()`](src/lib/utils.ts:4) and any future domain logic.
+   - Suggested tooling: **Vitest** (fits naturally with Vite).
+
+2) **Component tests (render + behavior)**
+   - Target: reusable UI components under [`src/components/ui/`](src/components/ui/button.tsx:1) and composed components like [`Sidebar`](src/components/Sidebar.tsx:220).
+   - Suggested tooling: **React Testing Library** + **@testing-library/jest-dom** assertions.
+   - Guideline: test user-observable behavior and accessibility roles/labels rather than implementation details.
+
+3) **Route/auth flow tests (integration-level)**
+   - Target: route guards and redirects defined via `beforeLoad` (e.g. unauthenticated access to the authenticated layout in [`src/routes/_auth.tsx`](src/routes/_auth.tsx:9)).
+   - Suggested approach: render the app router and simulate navigation with a controlled auth store state.
+   - Mocking: if/when API calls exist, prefer **MSW** for request mocking.
+
+4) **End-to-end tests (critical user journeys)**
+   - Target: login → dashboard navigation, sidebar interactions, and critical task flows.
+   - Suggested tooling: **Playwright** (fast, reliable cross-browser automation).
+   - Guideline: keep E2E small and focused on high-value scenarios.
+
+**Proposed conventions (when added):**
+
+- Place unit/component tests alongside code (e.g. `Button.test.tsx`) or under `src/__tests__/` (choose one and stay consistent).
+- Add scripts to [`package.json`](package.json:1), such as `test`, `test:watch`, `test:ui`, `test:e2e`.
+
 ---
 
 ## 3) Overall architecture
@@ -202,6 +232,7 @@ sequenceDiagram
 - No API layer yet (no `fetch`/axios service modules, no query caching library).
 - Auth is currently a client-side flag persisted to localStorage.
 - The architecture intentionally places auth checks in route guards (`beforeLoad`) to keep “page access rules” near routing.
+- No test framework is currently wired into the repo; the testing section above documents the intended direction.
 
 ---
 
@@ -211,4 +242,3 @@ sequenceDiagram
 - Replace the placeholder login with a backend-driven auth flow (token storage, refresh, logout).
 - Add route-level loaders/actions in TanStack Router for data fetching, co-located with routes.
 - Add a server state library (e.g., TanStack Query) if/when the UI becomes data-heavy.
-
