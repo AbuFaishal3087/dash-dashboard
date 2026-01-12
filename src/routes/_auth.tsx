@@ -1,9 +1,17 @@
 import { Sidebar } from "@/components/Sidebar";
 import { Button } from "@/components/ui/button";
 import useAuthStore from "@/store/useAuthStore";
-import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Outlet,
+  useLocation,
+  useNavigate,
+} from "@tanstack/react-router";
 import { redirect } from "@tanstack/react-router";
-import { Bell, Menu } from "lucide-react";
+import {
+  // Bell,
+  Menu,
+} from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/_auth")({
@@ -22,6 +30,7 @@ export const Route = createFileRoute("/_auth")({
 
 function AuthLayout() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { logout } = useAuthStore();
   const handleLogout = () => {
@@ -57,21 +66,23 @@ function AuthLayout() {
               >
                 <Menu className="h-5 w-5" aria-hidden="true" />
               </Button>
-              <div>
-                <h1 className="text-lg sm:text-xl font-bold text-foreground">
-                  Dashboard
-                </h1>
-                <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">
-                  Welcome back{" "}
-                  <span className="text-yellow-500 font-medium px-1">
-                    {userId}
-                  </span>
-                  ! Here's your overview.
-                </p>
-              </div>
+              {location.pathname === "/dashboard" && (
+                <div>
+                  <h1 className="text-lg sm:text-xl font-bold text-foreground">
+                    Dashboard
+                  </h1>
+                  <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">
+                    Welcome back{" "}
+                    <span className="text-yellow-500 font-medium px-1">
+                      {userId}
+                    </span>
+                    ! Here's your overview.
+                  </p>
+                </div>
+              )}
             </div>
             <div className="flex items-center gap-2 sm:gap-4">
-              <Button
+              {/* <Button
                 variant="ghost"
                 size="icon"
                 className="relative min-h-[44px] min-w-[44px]"
@@ -82,7 +93,7 @@ function AuthLayout() {
                   className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"
                   aria-hidden="true"
                 />
-              </Button>
+              </Button> */}
               <div className="hidden sm:flex items-center gap-3 pl-4 border-l">
                 <div className="text-right">
                   <p className="text-sm font-medium">GEHDOFF / 01</p>

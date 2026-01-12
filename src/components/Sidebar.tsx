@@ -1,10 +1,10 @@
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+} from "@/components/ui/collapsible";
 import {
   ChevronDown,
   LogOut,
@@ -21,19 +21,20 @@ import {
   BarChart3,
   Wrench,
   X,
-} from "lucide-react"
-import { cn } from "@/lib/utils"
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 
 interface SidebarProps {
-  onLogout: () => void
-  isOpen: boolean
-  onClose: () => void
+  onLogout: () => void;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 interface MenuItem {
-  label: string
-  icon: React.ReactNode
-  children?: { label: string; icon?: React.ReactNode }[]
+  label: string;
+  icon: React.ReactNode;
+  children?: { label: string; icon?: React.ReactNode; pathname?: string }[];
 }
 
 const menuItems: MenuItem[] = [
@@ -41,16 +42,24 @@ const menuItems: MenuItem[] = [
     label: "Counter Functions",
     icon: <LayoutDashboard className="h-4 w-4" aria-hidden="true" />,
     children: [
-      { label: "Rent", icon: <Car className="h-4 w-4" aria-hidden="true" /> },
-      { label: "Return", icon: <ClipboardList className="h-4 w-4" aria-hidden="true" /> },
+      {
+        label: "Rent",
+        icon: <Car className="h-4 w-4" aria-hidden="true" />,
+        pathname: "/rent",
+      },
+      {
+        label: "Return",
+        icon: <ClipboardList className="h-4 w-4" aria-hidden="true" />,
+        pathname: "/return",
+      },
       { label: "GS Start Rent" },
       { label: "Select GS Res List" },
       { label: "Post Rent" },
       { label: "Post Return" },
       { label: "Select Res Manifest" },
       { label: "Non-Move Exchange" },
-      { label: "Vehicle Exchange" },
-      { label: "AAO" },
+      { label: "Vehicle Exchange", pathname: "/vehicle_exchange" },
+      { label: "AAO", pathname: "/aao" },
       { label: "Update Opt Services" },
       { label: "Platinum Pre-Print" },
       { label: "Platinum Complete" },
@@ -144,29 +153,51 @@ const menuItems: MenuItem[] = [
       { label: "Access Control" },
     ],
   },
-]
+];
 
 const quickLinks = [
-  { label: "Res/Rental Research", icon: <Search className="h-4 w-4" aria-hidden="true" /> },
-  { label: "#1 Club Update", icon: <Users className="h-4 w-4" aria-hidden="true" /> },
-]
+  {
+    label: "Res/Rental Research",
+    icon: <Search className="h-4 w-4" aria-hidden="true" />,
+  },
+  {
+    label: "#1 Club Update",
+    icon: <Users className="h-4 w-4" aria-hidden="true" />,
+  },
+];
 
-function SidebarMenuItem({ item, onItemClick }: { item: MenuItem; onItemClick?: () => void }) {
-  const [isOpen, setIsOpen] = useState(false)
-  const menuId = `menu-${item.label.replace(/\s+/g, '-').toLowerCase()}`
+function SidebarMenuItem({
+  item,
+  onItemClick,
+}: {
+  item: MenuItem;
+  onItemClick?: () => void;
+}) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  const menuId = `menu-${item.label.replace(/\s+/g, "-").toLowerCase()}`;
+
+  useEffect(() => {
+    if (item.children?.some((v) => v?.pathname === location.pathname)) {
+      setIsOpen(true);
+    }
+  }, [location, item]);
 
   if (!item.children) {
     return (
-      <Button
-        variant="sidebar"
-        size="sidebar"
-        onClick={onItemClick}
-        className="min-h-[44px] touch-manipulation"
-      >
-        {item.icon}
-        <span>{item.label}</span>
-      </Button>
-    )
+      <div className=" bg-gray-200">
+        <Button
+          variant="sidebar"
+          size="sidebar"
+          onClick={onItemClick}
+          className="min-h-[44px] touch-manipulation"
+        >
+          {item.icon}
+          <span>{item.label}</span>
+        </Button>
+      </div>
+    );
   }
 
   return (
@@ -196,17 +227,30 @@ function SidebarMenuItem({ item, onItemClick }: { item: MenuItem; onItemClick?: 
         id={menuId}
         className="overflow-hidden data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-up data-[state=open]:slide-down"
       >
-        <ul className="ml-4 mt-1 space-y-0.5 border-l border-sidebar-border pl-3" role="menu">
+        <ul
+          className="ml-4 mt-1 space-y-0.5 border-l border-sidebar-border pl-3"
+          role="menu"
+        >
           {item.children.map((child, index) => (
             <li key={index} role="none">
               <Button
                 variant="ghost"
                 size="sidebar"
-                onClick={onItemClick}
-                className="w-full justify-start text-sm text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent min-h-[44px] touch-manipulation"
+                onClick={() => {
+                  if (child?.pathname) navigate({ to: child.pathname });
+                  if (onItemClick) onItemClick();
+                }}
+                className={cn(
+                  location.pathname === child.pathname && "bg-sidebar-accent",
+                  "w-full justify-start text-sm text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent min-h-[44px] touch-manipulation pl-3"
+                )}
                 role="menuitem"
               >
-                {child.icon && <span className="mr-2" aria-hidden="true">{child.icon}</span>}
+                {child.icon && (
+                  <span className="mr-2" aria-hidden="true">
+                    {child.icon}
+                  </span>
+                )}
                 {child.label}
               </Button>
             </li>
@@ -214,7 +258,7 @@ function SidebarMenuItem({ item, onItemClick }: { item: MenuItem; onItemClick?: 
         </ul>
       </CollapsibleContent>
     </Collapsible>
-  )
+  );
 }
 
 export function Sidebar({ onLogout, isOpen, onClose }: SidebarProps) {
@@ -225,7 +269,7 @@ export function Sidebar({ onLogout, isOpen, onClose }: SidebarProps) {
         <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden touch-manipulation"
           onClick={onClose}
-          onKeyDown={(e) => e.key === 'Escape' && onClose()}
+          onKeyDown={(e) => e.key === "Escape" && onClose()}
           role="button"
           tabIndex={0}
           aria-label="Close navigation menu"
@@ -237,7 +281,9 @@ export function Sidebar({ onLogout, isOpen, onClose }: SidebarProps) {
         id="main-sidebar"
         role="navigation"
         aria-label="Main navigation"
-        aria-hidden={!isOpen && typeof window !== 'undefined' && window.innerWidth < 1024}
+        aria-hidden={
+          !isOpen && typeof window !== "undefined" && window.innerWidth < 1024
+        }
         className={cn(
           "fixed lg:static inset-y-0 left-0 z-50 w-64 bg-sidebar flex flex-col shadow-xl transition-transform duration-300 lg:translate-x-0",
           isOpen ? "translate-x-0" : "-translate-x-full"
@@ -247,10 +293,16 @@ export function Sidebar({ onLogout, isOpen, onClose }: SidebarProps) {
         <div className="p-5 border-b border-sidebar-border flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-xl bg-sidebar-primary flex items-center justify-center shadow-lg">
-              <span className="font-bold text-lg text-sidebar-primary-foreground">H</span>
+              <span className="font-bold text-lg text-sidebar-primary-foreground">
+                H
+              </span>
             </div>
             <div>
-              <h1 className="font-bold text-lg text-sidebar-foreground tracking-tight">Hertz DASH</h1>
+              <Link to="/dashboard">
+                <h1 className="font-bold text-lg text-sidebar-foreground tracking-tight">
+                  Hertz DASH
+                </h1>
+              </Link>
               <p className="text-xs text-sidebar-muted">v3.21.0-14.11</p>
             </div>
           </div>
@@ -266,13 +318,22 @@ export function Sidebar({ onLogout, isOpen, onClose }: SidebarProps) {
         </div>
 
         {/* User Info */}
-        <div className="px-4 py-3 border-b border-sidebar-border" role="region" aria-label="User information">
+        <div
+          className="px-4 py-3 border-b border-sidebar-border"
+          role="region"
+          aria-label="User information"
+        >
           <div className="flex items-center gap-3 rounded-lg bg-sidebar-accent/50 p-2.5">
-            <div className="h-9 w-9 rounded-full bg-sidebar-primary/20 flex items-center justify-center" aria-hidden="true">
+            <div
+              className="h-9 w-9 rounded-full bg-sidebar-primary/20 flex items-center justify-center"
+              aria-hidden="true"
+            >
               <UserCircle className="h-5 w-5 text-sidebar-primary" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-sidebar-foreground truncate">GEHDOFF</p>
+              <p className="text-sm font-medium text-sidebar-foreground truncate">
+                GEHDOFF
+              </p>
               <p className="text-xs text-sidebar-muted">Location: 01</p>
             </div>
           </div>
@@ -326,5 +387,5 @@ export function Sidebar({ onLogout, isOpen, onClose }: SidebarProps) {
         </div>
       </aside>
     </>
-  )
+  );
 }
