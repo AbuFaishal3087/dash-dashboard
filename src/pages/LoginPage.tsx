@@ -1,27 +1,28 @@
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Car, Lock, User, MapPin, Building2 } from "lucide-react"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Car, Lock, User, MapPin, Building2 } from "lucide-react";
+import useAuthStore from "@/store/useAuthStore";
+import { useNavigate } from "@tanstack/react-router";
 
-interface LoginPageProps {
-  onLogin: (userId: string) => void
-}
+export function LoginPage() {
+  const navigate = useNavigate();
 
-export function LoginPage({ onLogin }: LoginPageProps) {
-  const [userId, setUserId] = useState("")
-  const [password, setPassword] = useState("")
-  const [userIdLocation, setUserIdLocation] = useState("")
-  const [loginLocation, setLoginLocation] = useState("")
+  const login = useAuthStore((state) => state.login);
+  const [userId, setUserId] = useState("");
+  const [password, setPassword] = useState("");
+  const [userIdLocation, setUserIdLocation] = useState("");
+  const [loginLocation, setLoginLocation] = useState("");
 
   const isDisabled = !userId || !password;
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    onLogin(userId)
-  }
-
+    e.preventDefault();
+    login(userId);
+    navigate({ to: "/dashboard" });
+  };
   return (
     <div className="min-h-screen bg-gradient-to-br from-lavender via-lavender-dark/30 to-lavender flex">
       {/* Left Panel - Branding */}
@@ -39,11 +40,17 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             {/* Logo */}
             <div className="flex items-center gap-4">
               <div className="h-14 w-14 rounded-2xl bg-sidebar-primary flex items-center justify-center shadow-xl">
-                <span className="font-bold text-2xl text-sidebar-primary-foreground">H</span>
+                <span className="font-bold text-2xl text-sidebar-primary-foreground">
+                  H
+                </span>
               </div>
               <div>
-                <h1 className="font-bold text-2xl text-white tracking-tight">Hertz DASH</h1>
-                <p className="text-sm text-white/60">Rental Management System</p>
+                <h1 className="font-bold text-2xl text-white tracking-tight">
+                  Hertz DASH
+                </h1>
+                <p className="text-sm text-white/60">
+                  Rental Management System
+                </p>
               </div>
             </div>
           </div>
@@ -51,31 +58,54 @@ export function LoginPage({ onLogin }: LoginPageProps) {
           <div className="space-y-8">
             <div>
               <h2 className="text-4xl font-bold text-white leading-tight">
-                Welcome to the<br />
+                Welcome to the
+                <br />
                 <span className="text-sidebar-primary">DASH Portal</span>
               </h2>
               <p className="mt-4 text-lg text-white/70 max-w-md">
-                Access your rental management tools, fleet operations, and customer services all in one place.
+                Access your rental management tools, fleet operations, and
+                customer services all in one place.
               </p>
             </div>
 
             {/* Features */}
-            <div className="grid grid-cols-2 gap-4" role="list" aria-label="Key features">
+            <div
+              className="grid grid-cols-2 gap-4"
+              role="list"
+              aria-label="Key features"
+            >
               {[
-                { icon: <Car className="h-5 w-5" aria-hidden="true" />, label: "Fleet Management" },
-                { icon: <User className="h-5 w-5" aria-hidden="true" />, label: "Customer Portal" },
-                { icon: <Building2 className="h-5 w-5" aria-hidden="true" />, label: "Multi-Location" },
-                { icon: <Lock className="h-5 w-5" aria-hidden="true" />, label: "Secure Access" },
+                {
+                  icon: <Car className="h-5 w-5" aria-hidden="true" />,
+                  label: "Fleet Management",
+                },
+                {
+                  icon: <User className="h-5 w-5" aria-hidden="true" />,
+                  label: "Customer Portal",
+                },
+                {
+                  icon: <Building2 className="h-5 w-5" aria-hidden="true" />,
+                  label: "Multi-Location",
+                },
+                {
+                  icon: <Lock className="h-5 w-5" aria-hidden="true" />,
+                  label: "Secure Access",
+                },
               ].map((feature, i) => (
                 <div
                   key={i}
                   role="listitem"
                   className="flex items-center gap-3 p-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10"
                 >
-                  <div className="h-10 w-10 rounded-lg bg-sidebar-primary/20 flex items-center justify-center text-sidebar-primary" aria-hidden="true">
+                  <div
+                    className="h-10 w-10 rounded-lg bg-sidebar-primary/20 flex items-center justify-center text-sidebar-primary"
+                    aria-hidden="true"
+                  >
                     {feature.icon}
                   </div>
-                  <span className="text-sm font-medium text-white/90">{feature.label}</span>
+                  <span className="text-sm font-medium text-white/90">
+                    {feature.label}
+                  </span>
                 </div>
               ))}
             </div>
@@ -94,11 +124,17 @@ export function LoginPage({ onLogin }: LoginPageProps) {
           <div className="lg:hidden mb-8 text-center">
             <div className="inline-flex items-center gap-3">
               <div className="h-12 w-12 rounded-xl bg-sidebar-primary flex items-center justify-center shadow-lg">
-                <span className="font-bold text-xl text-sidebar-primary-foreground">H</span>
+                <span className="font-bold text-xl text-sidebar-primary-foreground">
+                  H
+                </span>
               </div>
               <div className="text-left">
-                <h1 className="font-bold text-xl text-foreground">Hertz DASH</h1>
-                <p className="text-xs text-muted-foreground">Rental Management System</p>
+                <h1 className="font-bold text-xl text-foreground">
+                  Hertz DASH
+                </h1>
+                <p className="text-xs text-muted-foreground">
+                  Rental Management System
+                </p>
               </div>
             </div>
           </div>
@@ -106,7 +142,9 @@ export function LoginPage({ onLogin }: LoginPageProps) {
           <Card className="glass border-0 shadow-2xl shadow-lavender-dark/20">
             <CardHeader className="text-center pb-2">
               <h2 className="text-2xl font-bold text-foreground">Sign In</h2>
-              <p className="text-muted-foreground">Enter your credentials to continue</p>
+              <p className="text-muted-foreground">
+                Enter your credentials to continue
+              </p>
             </CardHeader>
             <CardContent className="pt-4">
               <form onSubmit={handleSubmit} className="space-y-5">
@@ -116,7 +154,10 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                     User ID
                   </Label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                    <User
+                      className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+                      aria-hidden="true"
+                    />
                     <Input
                       id="userId"
                       type="text"
@@ -138,7 +179,10 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                     Password
                   </Label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                    <Lock
+                      className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+                      aria-hidden="true"
+                    />
                     <Input
                       id="password"
                       type="password"
@@ -154,11 +198,17 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                 {/* Location Fields */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="userIdLocation" className="text-sm font-medium">
+                    <Label
+                      htmlFor="userIdLocation"
+                      className="text-sm font-medium"
+                    >
                       User Location
                     </Label>
                     <div className="relative">
-                      <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                      <MapPin
+                        className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+                        aria-hidden="true"
+                      />
                       <Input
                         id="userIdLocation"
                         type="text"
@@ -172,11 +222,17 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="loginLocation" className="text-sm font-medium">
+                    <Label
+                      htmlFor="loginLocation"
+                      className="text-sm font-medium"
+                    >
                       Login Location
                     </Label>
                     <div className="relative">
-                      <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                      <Building2
+                        className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+                        aria-hidden="true"
+                      />
                       <Input
                         id="loginLocation"
                         type="text"
@@ -190,12 +246,18 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                   </div>
                 </div>
 
-                <Button disabled={isDisabled} type="submit" size="lg" className="w-full mt-6 min-h-[48px] touch-manipulation">
+                <Button
+                  disabled={isDisabled}
+                  type="submit"
+                  size="lg"
+                  className="w-full mt-6 min-h-[48px] touch-manipulation"
+                >
                   Sign In
                 </Button>
 
                 <p className="text-center text-xs text-muted-foreground mt-4">
-                  By signing in, you agree to the terms of use and privacy policy.
+                  By signing in, you agree to the terms of use and privacy
+                  policy.
                 </p>
               </form>
             </CardContent>
@@ -207,5 +269,5 @@ export function LoginPage({ onLogin }: LoginPageProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }
